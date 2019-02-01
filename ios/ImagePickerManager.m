@@ -524,9 +524,13 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [picker dismissViewControllerAnimated:YES completion:^{
-            self.callback(@[@{@"didCancel": @YES}]);
-        }];
+        self.callback(@[@{@"didCancel": @YES}]);
+        struct timespec ts;
+        int milliseconds = 100;
+        ts.tv_sec = milliseconds / 1000;
+        ts.tv_nsec = (milliseconds % 1000) * 1000000;
+        nanosleep(&ts, NULL);
+        [picker dismissViewControllerAnimated:YES completion:NULL];
     });
 }
 
